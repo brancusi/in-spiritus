@@ -70,16 +70,16 @@ class RouteVisitsController < ApplicationJsonApiResourcesController
 
   def process_fulfillment(data, route_visit, completed_at)
     fulfillment = route_visit.fulfillments.find(data[:id])
-    if fulfillment.nil?
-      raise "Fulfillment with id #{data[:id]} not found on route_visit #{route_visit.id}"
+    if fulfillment.present?
+      process_order data[:order]
+      process_credit_note data[:credit_note]
+      process_stock(data[:stock], completed_at)
+      process_pod data[:pod]
+
+      fulfillment.mark_fulfilled!
     end
 
-    process_order data[:order]
-    process_credit_note data[:credit_note]
-    process_stock(data[:stock], completed_at)
-    process_pod data[:pod]
 
-    fulfillment.mark_fulfilled!
   end
 
   def process_order(data)
