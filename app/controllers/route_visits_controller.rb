@@ -69,7 +69,14 @@ class RouteVisitsController < ApplicationJsonApiResourcesController
   end
 
   def process_fulfillment(data, route_visit, completed_at)
-    fulfillment = route_visit.fulfillments.find(data[:id])
+    fulfillment = nil
+
+    begin
+      fulfillment = route_visit.fulfillments.find(data[:id])
+    rescue
+
+    end
+
     if fulfillment.present?
       process_order data[:order]
       process_credit_note data[:credit_note]
