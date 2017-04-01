@@ -1,11 +1,19 @@
 module Pdf
   module Elements
-    def guide_y(y = pdf.cursor)
-      pdf.stroke_axis(:at => [0, y], :height => 0, :step_length => 20, :negative_axes_length => 5, :color => '0000FF')
+    def guide(pdf)
+      pdf.stroke_axis
     end
 
-    def guide_x(x = pdf.cursor)
-      pdf.stroke_axis(:at => [x, 0], :height => 0, :step_length => 20, :negative_axes_length => 5, :color => '0000FF')
+    def guide_y(pdf)
+      pdf.stroke_axis(:at => [0, pdf.cursor], :height => 0, :step_length => 20, :negative_axes_length => 5, :color => '0000FF')
+    end
+
+    def guide_x(pdf)
+      pdf.stroke_axis(:at => [pdf.cursor, 0], :height => 0, :step_length => 20, :negative_axes_length => 5, :color => '0000FF')
+    end
+
+    def logo(pdf)
+      pdf.image "app/assets/images/logo.png", :width => 100, :at => [ 440, 730]
     end
 
     def pod(pod, pdf)
@@ -95,17 +103,10 @@ module Pdf
       pdf.start_new_page if pdf.cursor < 20
     end
 
-    def footer(svg, pdf)
-      y = 140
-      pdf.start_new_page if pdf.cursor < y
-      pdf.svg IO.read(svg), :at => [0, y], :width => 540
-    end
-
     def shipping(val, pdf)
       y = pdf.cursor
       pdf.line_width = 1
 
-      pdf.dash(1, :space => 0, :phase => 0)
       pdf.stroke_horizontal_line 380, 540
 
       pdf.bounding_box([340, y], :width => 100, :height => 20) do
@@ -133,8 +134,29 @@ module Pdf
       end
     end
 
-    def logo(pdf)
-      pdf.image "app/assets/images/logo.png", :width => 100, :at => [ 440, 730]
+    def comment(comment, pdf)
+      if comment.present?
+        y = pdf.cursor - 20
+
+        pdf.dash(1, :space => 5, :phase => 0)
+        pdf.transparent(0.5) { pdf.stroke_horizontal_line 0, 540, :at => y}
+
+        y = pdf.cursor - 30
+
+        pdf.bounding_box([0, y], :width => 100, :height => 20) do
+         pdf.formatted_text_box [{ text: 'Notes', size: 10, styles:[:bold]}], :valign => :top
+        end
+
+        y = pdf.cursor
+
+        pdf.text_box(comment, :at => [0, y], :width => 500, :size => 9)
+      end
+    end
+
+    def footer(svg, pdf)
+      y = 140
+      pdf.start_new_page if pdf.cursor < y
+      pdf.svg IO.read(svg), :at => [0, y], :width => 540
     end
 
   end

@@ -14,6 +14,8 @@ module Pdf
       shipping(order.shipping, pdf)
       total(order.total, pdf)
 
+      comment(order.comment, pdf)
+
       footer("app/assets/images/invoice_footer.svg", pdf)
     end
 
