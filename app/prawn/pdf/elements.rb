@@ -1,3 +1,6 @@
+include StringUtils
+include ActionView::Helpers::NumberHelper
+
 module Pdf
   module Elements
     def guide(pdf)
@@ -114,7 +117,7 @@ module Pdf
       end
 
       pdf.bounding_box([500, y], :width => 35, :height => 20) do
-       pdf.formatted_text_box [{ text: val.to_s, size: 11}], :align => :right, :valign => :center
+       pdf.formatted_text_box [{ text: number_with_precision(val, precision:2), size: 11}], :align => :right, :valign => :center
       end
     end
 
@@ -130,31 +133,36 @@ module Pdf
       end
 
       pdf.bounding_box([500, y], :width => 35, :height => 20) do
-       pdf.formatted_text_box [{ text: val.to_s, size: 11}], :align => :right, :valign => :center
+       pdf.formatted_text_box [{ text: number_with_precision(val, precision:2), size: 11}], :align => :right, :valign => :center
       end
     end
 
     def comment(comment, pdf)
       if comment.present?
-        y = pdf.cursor - 20
+        y = pdf.cursor - 10
 
         pdf.dash(1, :space => 5, :phase => 0)
         pdf.transparent(0.5) { pdf.stroke_horizontal_line 0, 540, :at => y}
 
-        y = pdf.cursor - 30
+        y = pdf.cursor - 15
 
         pdf.bounding_box([0, y], :width => 100, :height => 20) do
          pdf.formatted_text_box [{ text: 'Notes', size: 10, styles:[:bold]}], :valign => :top
         end
 
-        y = pdf.cursor
+        y = pdf.cursor + 5
 
-        pdf.text_box(comment, :at => [0, y], :width => 500, :size => 9)
+        pdf.bounding_box([0, y], :width => 500) do
+         pdf.formatted_text_box [{ text: comment, size: 9}], :valign => :top
+        end
+
+        pdf.move_down (count_lines(comment) * 10)
       end
     end
 
     def footer(svg, pdf)
       y = 140
+
       pdf.start_new_page if pdf.cursor < y
       pdf.svg IO.read(svg), :at => [0, y], :width => 540
     end
