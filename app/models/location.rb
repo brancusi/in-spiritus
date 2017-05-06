@@ -7,6 +7,7 @@ class Location < ActiveRecord::Base
 	belongs_to :address
 
 	has_many :orders, :dependent => :destroy, autosave: true
+	has_many :order_templates, :dependent => :destroy, autosave: true
 	has_many :credit_notes, :dependent => :destroy, autosave: true
 	has_many :stocks, :dependent => :destroy, autosave: true
 
