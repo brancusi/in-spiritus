@@ -1,7 +1,7 @@
 class StandingOrders < ActiveRecord::Migration
   def up
     create_table :order_templates do |t|
-      t.datetime :start_date, null: false
+      t.date :start_date, null: false
       t.integer :frequency, index: true, default: 1, null: false
       t.references :location, index: true, foreign_key: true, null: false
       t.timestamps null: false

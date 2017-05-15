@@ -41,12 +41,7 @@ class OrdersController < ApplicationJsonApiResourcesController
   def build_orders_from_template(location, delivery_date)
     location
       .order_templates
-      .select {|order_template| order_template.order_template_days.any? {|otd| otd.day + 1 == delivery_date.cwday}}
-      .select {|order_template|
-        days_since = delivery_date - order_template.start_date
-        weeks_since = (days_since/7).floor
-        weeks_since % order_template.frequency == 0
-      }
+      .select {|order_template| order_template.valid_for_date?(delivery_date)}
       .map {|order_template| build_order_from_template(order_template, delivery_date)}
   end
 

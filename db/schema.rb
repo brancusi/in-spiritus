@@ -244,7 +244,7 @@ ActiveRecord::Schema.define(version: 20170506194637) do
   add_index "order_template_items", ["order_template_id"], name: "index_order_template_items_on_order_template_id", using: :btree
 
   create_table "order_templates", force: :cascade do |t|
-    t.datetime "start_date",              null: false
+    t.date     "start_date",              null: false
     t.integer  "frequency",   default: 1, null: false
     t.integer  "location_id",             null: false
     t.datetime "created_at",              null: false
