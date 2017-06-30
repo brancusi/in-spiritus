@@ -130,6 +130,7 @@ class BaseSyncer
   end
 
   def process_local(models)
+
     # We merge the model and record
     zipped = models.map(&method(:zip_model_record))
 
