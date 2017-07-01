@@ -5,6 +5,7 @@ class BaseSyncer
   def sync_local
     process_local(find_models.take(5))
   rescue => e
+    p e
     error e
   end
 
@@ -130,7 +131,6 @@ class BaseSyncer
   end
 
   def process_local(models)
-
     # We merge the model and record
     zipped = models.map(&method(:zip_model_record))
 

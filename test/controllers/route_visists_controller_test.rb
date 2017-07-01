@@ -135,4 +135,5 @@ class RouteVisitsControllerTest < ActionController::TestCase
 
     assert_equal(start_payload, end_payload, "payload should not have changed")
   end
+
 end
